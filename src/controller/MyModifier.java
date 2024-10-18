@@ -1,19 +1,38 @@
-import java.util.Arrays;
+package controller;
+
 import java.util.Scanner;
 
-public class Main {
-    public static void main(String[] args) {
-        System.out.println(textModifier());
-    }
+public class MyModifier {
+    /**
+     * 1. Пользователь вводит текст одной строкой и нажимает “enter”.
+     * 2. В тексте могут присутствовать различные специальные символы, которые надо обрабатывать согласно условиям ниже:
+     * a. Если в тексте между словами присутствует несколько пробелов подряд, надо оставить только один из них.
+     * Для реализации этого подпункта нельзя пользоваться методами replace() и replaceAll().
+     * b. Если в тексте присутствует знак минус (-), это значит, что символ слева от этого знака надо поменять местами с символом,
+     * который стоит справа от этого знака. Обратите внимание, что символом может быть не только буква,
+     * но и цифра или любой другой знак/символ, в том числе символ пробела. После смены символов местами,
+     * знак минус (-) надо удалить из строки результата.
+     * c. Если в тексте присутствует знак плюс (+), вам необходимо заменить его на восклицательный знак (!).
+     * d. В тексте могут присутствовать цифры (от 0 до 9). Вам необходимо посчитать их сумму и удалить из текста.
+     * Сумму цифр вам нужно добавить в конец результирующей строки через пробел (пробел должен стоять перед суммой цифр).
+     * Если цифр в тексте не было - "0" (ноль) в конце строки выводить не нужно.
+     * Все манипуляции с текстом должны выполняться ровно в той последовательности, которая описана в пункте 2.
+     * То есть, сначала выполняется пункт A, затем пункт B, затем C и D. Это важно для получения корректного итогового результата.
+     * Пример ввода:
+     * генрих1  играет+2   л-июбит0школу
+     * Пример вывода:
+     * генрих играет! илюбитшколу 3
+     * Пример ввода №2:
+     * Я ю-лбю-л джаву   всем сердцем+
+     * Пример вывода:
+     * Я люблю джаву всем сердцем!
+     */
 
-    public static String textModifier() {
+    public String textModifier() {
         String result = null;
-        int summ = 0;
-//        System.out.print("Введите строку: ");
-//        Scanner scanner = new Scanner(System.in);
-//        String[] arrLine = scanner.nextLine().split("");
-        String[] arrLine = {"А","б", " ", "1", " ", " ", "2", " ", " ", " ", "3", "-", "1", " ", " ", " ", "2", " ", " ", "3", "+"};
-
+        System.out.print("Введите строку: ");
+        Scanner scanner = new Scanner(System.in);
+        String[] arrLine = scanner.nextLine().split("");
 
         /**
          * a. Если в тексте между словами присутствует несколько пробелов подряд, надо оставить только один из них.
@@ -26,33 +45,32 @@ public class Main {
 //                    arrLine = test(arrLine, i);
                 }
             }
-            /**
-             * b. Если в тексте присутствует знак минус (-), это значит, что символ слева от этого знака надо поменять местами с символом,
-             * который стоит справа от этого знака. Обратите внимание, что символом может быть не только буква,
-             * но и цифра или любой другой знак/символ, в том числе символ пробела. После смены символов местами,
-             * знак минус (-) надо удалить из строки результата.
-             */
-            arrLine = myChange(arrLine, "-");
-
-            /**
-             * c. Если в тексте присутствует знак плюс (+), вам необходимо заменить его на восклицательный знак (!).
-             */
-            arrLine = myChangeChar(arrLine, "+", "!");
-
-            summ = sum(arrLine);
-
         }
+
+        /**
+         * b. Если в тексте присутствует знак минус (-), это значит, что символ слева от этого знака надо поменять местами с символом,
+         * который стоит справа от этого знака. Обратите внимание, что символом может быть не только буква,
+         * но и цифра или любой другой знак/символ, в том числе символ пробела. После смены символов местами,
+         * знак минус (-) надо удалить из строки результата.
+         */
+        arrLine = myChange(arrLine, "-");
+
+        /**
+         * c. Если в тексте присутствует знак плюс (+), вам необходимо заменить его на восклицательный знак (!).
+         */
+        arrLine = myChangeChar(arrLine, "+", "!");
+
         /**
          * В тексте могут присутствовать цифры (от 0 до 9). Вам необходимо посчитать их сумму и удалить из текста.
          * Сумму цифр вам нужно добавить в конец результирующей строки через пробел (пробел должен стоять перед суммой цифр).
          * Если цифр в тексте не было - "0" (ноль) в конце строки выводить не нужно.
          */
-        if (summ > 0) {
-            arrLine = delNumb(arrLine);
-            result = String.join("", arrLine) + " " + summ;
+        if (sum(arrLine) > 0) {
+            String[] temp = delNumb(arrLine);
+            result = String.join("", temp) + " " + sum(arrLine);
         } else {
-            arrLine = delNumb(arrLine);
-            result = String.join("", arrLine);
+            String[] temp = delNumb(arrLine);
+            result = String.join("", temp);
         }
         return result;
     }
@@ -63,7 +81,7 @@ public class Main {
      * @param line - исходный массив для проверки.
      * @return - возвращаем либо True(если есть), либо False(если отсутствуют).
      */
-    private static boolean check(String[] line) {
+    private boolean check(String[] line) {
         int count = 0;
         for (int i = 0; i < line.length; i++) {
             if (line[i].equals(" ") && line[i + 1].equals(" ")) {
@@ -83,7 +101,7 @@ public class Main {
      * @param indexToRemove - индекс символа который надо удалить.
      * @return - возвращаемый измененный массив.
      */
-    private static String[] myDelChar(String[] line, int indexToRemove) {
+    private String[] myDelChar(String[] line, int indexToRemove) {
         String[] result = new String[line.length - 1];
         System.arraycopy(line, 0, result, 0, indexToRemove);
         System.arraycopy(line, indexToRemove + 1, result, indexToRemove, line.length - indexToRemove - 1);
@@ -97,7 +115,7 @@ public class Main {
      * @param indexToRemove- индекс символа который надо удалить.
      * @return - возвращаемый измененный массив.
      */
-    private static String[] testDel(String[] line, int indexToRemove) {
+    private String[] testDel(String[] line, int indexToRemove) {
         String[] result = new String[line.length - 1];
         for (int i = 0; i < result.length; i++) {
             if (i < indexToRemove) {
@@ -115,7 +133,7 @@ public class Main {
      * @param line - исходный массив
      * @return - возвращаем измененный массив.
      */
-    private static String[] myChange(String[] line, String targetChar) {
+    private String[] myChange(String[] line, String targetChar) {
         for (int i = 0; i < line.length; i++) {
             if (line[i].equals(targetChar)) {
                 String temp = line[i - 1];
@@ -130,7 +148,7 @@ public class Main {
     /**
      * Метод в для замены символа "+" на символ "!".
      */
-    private static String[] myChangeChar(String[] line, String intChar, String outChar) {
+    private String[] myChangeChar(String[] line, String intChar, String outChar) {
         for (int i = 0; i < line.length; i++) {
             if (line[i].equals(intChar)) {
                 line[i] = outChar;
@@ -145,7 +163,7 @@ public class Main {
      * @param line - исходный массив.
      * @return - возвращаемая сумма.
      */
-    private static int sum(String[] line) {
+    private int sum(String[] line) {
         int result = 0;
         if (checkNumb(line)) {
             for (int i = 0; i < line.length; i++) {
@@ -163,7 +181,7 @@ public class Main {
      * @param line - исходный массив.
      * @return - возвращаем либо True(если есть), либо False(если отсутствуют).
      */
-    private static boolean checkNumb(String[] line) {
+    private boolean checkNumb(String[] line) {
         for (int i = 0; i < line.length; i++) {
             if (isNumber(line[i])) {
                 return true;
@@ -178,15 +196,12 @@ public class Main {
      * @param line - исходный массив
      * @return - возвращаем измененный массив.
      */
-    private static String[] delNumb(String[] line) {
-        System.out.println("Before del numb, line = " + Arrays.toString(line) + " , line.lenght = " + line.length);
+    private String[] delNumb(String[] line) {
         for (int i = 0; i < line.length; i++) {
             if (isNumber(line[i])) {
-                System.out.println("line[" + i + "] =" + line[i] + " -> " + isNumber(line[i]));
                 line = myDelChar(line, i);
             }
         }
-        System.out.println("After del numb, line = " + Arrays.toString(line));
         return line;
     }
 
@@ -196,7 +211,7 @@ public class Main {
      * @param line
      * @return
      */
-    private static boolean isNumber(String line) {
+    private boolean isNumber(String line) {
         boolean result = false;
         try {
             Integer.parseInt(line);
@@ -206,4 +221,5 @@ public class Main {
         }
         return result;
     }
-} 
+
+}
