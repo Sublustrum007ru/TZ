@@ -6,13 +6,12 @@ public class Main {
         System.out.println(textModifier());
     }
 
-    public static String textModifier() {
+    public static String textModifier(){
         String result = null;
         int summ = 0;
-//        System.out.print("Введите строку: ");
-//        Scanner scanner = new Scanner(System.in);
-//        String[] arrLine = scanner.nextLine().split("");
-        String[] arrLine = {"А","б", " ", "1", " ", " ", "2", " ", " ", " ", "3", "-", "1", " ", " ", " ", "2", " ", " ", "3", "+"};
+        System.out.print("Введите строку: ");
+        Scanner scanner = new Scanner(System.in);
+        String[] arrLine = scanner.nextLine().split("");
 
 
         /**
@@ -23,9 +22,9 @@ public class Main {
             for (int i = 0; i < arrLine.length; i++) {
                 if (arrLine[i].equals(" ") && arrLine[i + 1].equals(" ")) {
                     arrLine = myDelChar(arrLine, i);
-//                    arrLine = test(arrLine, i);
                 }
             }
+
             /**
              * b. Если в тексте присутствует знак минус (-), это значит, что символ слева от этого знака надо поменять местами с символом,
              * который стоит справа от этого знака. Обратите внимание, что символом может быть не только буква,
@@ -39,21 +38,24 @@ public class Main {
              */
             arrLine = myChangeChar(arrLine, "+", "!");
 
-            summ = sum(arrLine);
-
+            while(checkNumb(arrLine)){
+                /**
+                 * d. В тексте могут присутствовать цифры (от 0 до 9). Вам необходимо посчитать их сумму и удалить из текста.
+                 * Сумму цифр вам нужно добавить в конец результирующей строки через пробел (пробел должен стоять перед суммой цифр).
+                 * Если цифр в тексте не было - "0" (ноль) в конце строки выводить не нужно.
+                 */
+                summ = sum(arrLine);
+                arrLine = delNumb(arrLine);
+            }
         }
-        /**
-         * В тексте могут присутствовать цифры (от 0 до 9). Вам необходимо посчитать их сумму и удалить из текста.
-         * Сумму цифр вам нужно добавить в конец результирующей строки через пробел (пробел должен стоять перед суммой цифр).
-         * Если цифр в тексте не было - "0" (ноль) в конце строки выводить не нужно.
-         */
+
+
         if (summ > 0) {
-            arrLine = delNumb(arrLine);
             result = String.join("", arrLine) + " " + summ;
         } else {
-            arrLine = delNumb(arrLine);
             result = String.join("", arrLine);
         }
+
         return result;
     }
 
@@ -63,10 +65,18 @@ public class Main {
      * @param line - исходный массив для проверки.
      * @return - возвращаем либо True(если есть), либо False(если отсутствуют).
      */
+
+
     private static boolean check(String[] line) {
         int count = 0;
         for (int i = 0; i < line.length; i++) {
             if (line[i].equals(" ") && line[i + 1].equals(" ")) {
+                count++;
+            } else if (checkNumb(line)) {
+                count++;
+            } else if (line[i].equals("-")) {
+                count++;
+            } else if (line[i].equals("+")) {
                 count++;
             }
         }
@@ -179,22 +189,21 @@ public class Main {
      * @return - возвращаем измененный массив.
      */
     private static String[] delNumb(String[] line) {
-        System.out.println("Before del numb, line = " + Arrays.toString(line) + " , line.lenght = " + line.length);
-        for (int i = 0; i < line.length; i++) {
-            if (isNumber(line[i])) {
-                System.out.println("line[" + i + "] =" + line[i] + " -> " + isNumber(line[i]));
-                line = myDelChar(line, i);
+        while (checkNumb(line)) {
+            for (int i = 0; i < line.length; i++) {
+                if (isNumber(line[i])) {
+                    line = myDelChar(line, i);
+                }
             }
         }
-        System.out.println("After del numb, line = " + Arrays.toString(line));
         return line;
     }
 
     /**
-     * Метод провеки
+     * Метод провеки возможности преобразовать строку в число.
      *
-     * @param line
-     * @return
+     * @param line - входное значение.
+     * @return - возвращаем True если можем, False если не можем.
      */
     private static boolean isNumber(String line) {
         boolean result = false;

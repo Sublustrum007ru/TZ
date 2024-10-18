@@ -26,6 +26,9 @@ public class MyModifier {
      * Я ю-лбю-л джаву   всем сердцем+
      * Пример вывода:
      * Я люблю джаву всем сердцем!
+     * Ab 1  2   3-1   2  3+
+     * Ab ! 12
+     * Hell0 w0rld!!
      */
 
     public String textModifier() {
