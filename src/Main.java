@@ -38,12 +38,12 @@ public class Main {
              */
             arrLine = myChangeChar(arrLine, "+", "!");
 
+            /**
+             * d. В тексте могут присутствовать цифры (от 0 до 9). Вам необходимо посчитать их сумму и удалить из текста.
+             * Сумму цифр вам нужно добавить в конец результирующей строки через пробел (пробел должен стоять перед суммой цифр).
+             * Если цифр в тексте не было - "0" (ноль) в конце строки выводить не нужно.
+             */
             while(checkNumb(arrLine)){
-                /**
-                 * d. В тексте могут присутствовать цифры (от 0 до 9). Вам необходимо посчитать их сумму и удалить из текста.
-                 * Сумму цифр вам нужно добавить в конец результирующей строки через пробел (пробел должен стоять перед суммой цифр).
-                 * Если цифр в тексте не было - "0" (ноль) в конце строки выводить не нужно.
-                 */
                 summ = sum(arrLine);
                 arrLine = delNumb(arrLine);
             }
@@ -125,13 +125,19 @@ public class Main {
      * @param line - исходный массив
      * @return - возвращаем измененный массив.
      */
+    // H e l l 0   w 0 r l d  !  !  -
+    // 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14
     private static String[] myChange(String[] line, String targetChar) {
         for (int i = 0; i < line.length; i++) {
             if (line[i].equals(targetChar)) {
-                String temp = line[i - 1];
-                line[i - 1] = line[i + 1];
-                line[i + 1] = temp;
-                line = myDelChar(line, i);
+                if(i > 0 && i < line.length - 1) {
+                    String temp = line[i - 1];
+                    line[i - 1] = line[i + 1];
+                    line[i + 1] = temp;
+                    line = myDelChar(line, i);
+                }else{
+                    line = myDelChar(line, i);
+                }
             }
         }
         return line;

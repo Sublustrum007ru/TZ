@@ -28,7 +28,7 @@ public class MyModifier {
      * Я люблю джаву всем сердцем!
      * Ab 1  2   3-1   2  3+
      * Ab ! 12
-     * Hell0 w0rld!!
+     * Hell0 w0rld!!-
      */
 
     public String textModifier() {
